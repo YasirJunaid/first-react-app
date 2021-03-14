@@ -1,147 +1,105 @@
 import React, { Component } from "react";
 import "./index.css";
-import App from "./App";
 
-//make years and days array
-function generateArray(start, end) {
-  let arr = [];
-  for (start; start <= end; start++) {
-    arr.push(start);
-  }
-  return arr;
-}
-
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec"
-];
-//1-31
-const days = generateArray(1, 31);
-//1900-today
-const years = generateArray(1900, new Date().getFullYear());
-
-//calculate age
-function calculateAge(birthday) {
-  //milliseconds in a year 1000*24*60*60*365.24 = 31556736000;
-  let today = new Date(),
-    //birthay has 'Dec 25 1998'
-    dob = new Date(birthday),
-    //difference in milliseconds
-    diff = today.getTime() - dob.getTime(),
-    //convert milliseconds into years
-    years = Math.floor(diff / 31556736000),
-    //1 day has 86400000 milliseconds
-    days_diff = Math.floor((diff % 31556736000) / 86400000),
-    //1 month has 30.4167 days
-    months = Math.floor(days_diff / 30.4167),
-    days = Math.floor(days_diff % 30.4167);
-
-  console.log(`${years} years ${months} months ${days} days`);
-  return `${years} years ${months} months ${days} days`;
-}
 
 export default class AgeCalculator extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      day: 21,
-      month: "Jan",
-      year: 2005,
-      age: "------------------------------------------"
+    state = {};
+    render() {
+        return (
+            <div id="container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colSpan={2}><h1>Age Calculator</h1></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span>Date of birth: </span></td>
+                            <td><input ref={(r) => this.dob = r} type="date" /></td>
+                        </tr>
+                        <tr>
+                            <td colSpan={2}>
+                                <button onClick={this.calculateAge}>Calculate age</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan={2}><div className="result">{this.state.ageString}</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+    calculateAge = () => {
+        const dateString = this.dob.value;
+        const now = new Date();
+
+        const yearNow = now.getFullYear();
+        const monthNow = now.getMonth();
+        const dateNow = now.getDate();
+
+        const dob = new Date(dateString);
+
+        const yearDob = dob.getFullYear();
+        const monthDob = dob.getMonth();
+        const dateDob = dob.getDate();
+
+        let yearAge = yearNow - yearDob;
+        let monthAge;
+
+        if (monthNow >= monthDob) {
+            monthAge = monthNow - monthDob;
+        } else {
+            yearAge--;
+            monthAge = 12 + monthNow - monthDob;
+        }
+
+        let dateAge;
+        if (dateNow >= dateDob) {
+            dateAge = dateNow - dateDob;
+        } else {
+            monthAge--;
+            dateAge = 31 + dateNow - dateDob;
+
+            if (monthAge < 0) {
+                monthAge = 11;
+                yearAge--;
+            }
+        }
+
+        const age = {
+            years: yearAge,
+            months: monthAge,
+            days: dateAge
+        };
+
+        const yearString = (age.years > 1) ? "years" : "year";
+        const monthString = (age.months > 1) ? " months" : " month";
+        const dayString = (age.days > 1) ? " days" : " day";
+
+        let ageString = "";
+
+        if ((age.years > 0) && (age.months > 0) && (age.days > 0)) {
+            ageString = age.years + yearString + ", " + age.months + monthString + ", and " + age.days + dayString + " old.";
+        } else if ((age.years === 0) && (age.months === 0) && (age.days > 0)) {
+            ageString = "Only " + age.days + dayString + " old!";
+        } else if ((age.years > 0) && (age.months === 0) && (age.days === 0)) {
+            ageString = age.years + yearString + " old. Happy Birthday!!";
+        } else if ((age.years > 0) && (age.months > 0) && (age.days === 0)) {
+            ageString = age.years + yearString + " and " + age.months + monthString + " old.";
+        } else if ((age.years === 0) && (age.months > 0) && (age.days > 0)) {
+            ageString = age.months + monthString + " and " + age.days + dayString + " old.";
+        } else if ((age.years > 0) && (age.months === 0) && (age.days > 0)) {
+            ageString = age.years + yearString + " and " + age.days + dayString + " old.";
+        } else if ((age.years === 0) && (age.months > 0) && (age.days === 0)) {
+            ageString = age.months + monthString + " old.";
+        } else {
+            ageString = "Oops! Could not calculate age!";
+        }
+
+        this.setState({ ageString });
     };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDayChange = this.handleDayChange.bind(this);
-    this.handleMonthChange = this.handleMonthChange.bind(this);
-    this.handleYearChange = this.handleYearChange.bind(this);
-  }
-
-  handleDayChange(e) {
-    this.setState({
-      day: e.target.value
-    });
-  }
-
-  handleMonthChange(e) {
-    this.setState({
-      month: e.target.value
-    });
-  }
-
-  handleYearChange(e) {
-    this.setState({
-      year: e.target.value
-    });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-
-    const day = this.state.day,
-      month = this.state.month,
-      year = this.state.year;
-
-    let age = calculateAge(`${month} ${day} ${year}`);
-
-    this.setState({
-      age: age
-    });
-  }
-
-  render() {
-    return (
-      <div>
-          < App />
-        <h1>Age Calculator By Yasir</h1>
-        <form onSubmit={this.handleSubmit}>
-          <div className="container">
-            <Input
-              arr={days}
-              handleChange={this.handleDayChange}
-              val={this.state.day}
-            />
-            <Input
-              arr={months}
-              handleChange={this.handleMonthChange}
-              val={this.state.month}
-            />
-            <Input
-              arr={years}
-              handleChange={this.handleYearChange}
-              val={this.state.year}
-            />
-          </div>
-          <button type="submit">Calculate</button>
-        </form>
-        <article>
-          <h2>Your age is</h2>
-          <span>{this.state.age}</span>
-        </article>
-      </div>
-    );
-  }
 }
 
-function Input(props) {
-  let options = props.arr.map((item) => (
-    <option value={item} key={item}>
-      {item}
-    </option>
-  ));
-
-  return (
-    <select onChange={props.handleChange} value={props.val}>
-      {options}
-    </select>
-  );
-}

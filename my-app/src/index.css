@@ -13,7 +13,7 @@ body {
   font-family: "Merienda One", cursive;
 }
 
-main {
+/* main {
   > div {
     padding: 0 0.5rem;
     margin-top: 2rem;
@@ -38,6 +38,33 @@ main {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
+} */
+
+
+#container{
+  padding: 0 0.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+  text-align: center;
+  table{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    text-align: center;
+    h2{
+      text-align: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+  } 
+}
+
+span{
+  padding-right:20px;
+  font-size:15px;
+  font-weight:bold;
+  justify-content: center;
 }
 
 select,
@@ -47,15 +74,16 @@ button {
   cursor: pointer;
   font-family: inherit;
   border-radius: 2px;
+  justify-content: center;
 }
 
-select {
+/* select {
   background-color: #fff;
   padding: 0.4rem;
   margin: 0 0.5rem;
   flex-basis: 25%;
   font-size: 1.2rem;
-}
+} */
 
 button {
   width: 80%;
@@ -64,22 +92,37 @@ button {
   margin: 1rem auto;
   font-size: 1.2rem;
   padding: 0.5rem 0;
+  justify-content: center;
 }
 
-article {
+/* article {
   text-align: center;
   transition: all 0.2s linear;
   h2 {
     margin-top: 2rem;
     margin-bottom: 1rem;
   }
-}
+} */
 
-span {
+/* span {
   font-weight: bold;
   font-size: 1.2rem;
+} */
+
+/* a {
+  text-decoration: none;
+} */
+
+input{
+  padding:5px 10px;
+  border-radius: 12px;
+  border:none;
+  justify-content: center;
 }
 
-a {
-  text-decoration: none;
+.result{
+  text-align:center;
+  font-size:15px;
+  font-weight:bold;
+  justify-content: center;
 }
